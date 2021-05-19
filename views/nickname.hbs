@@ -24,6 +24,13 @@
         min-height: 400px;
         }
 
+        .center-screen {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        min-height: 100vh;
+        }
+
         small.centered{
             text-align: center;
         }
@@ -136,11 +143,9 @@
     <div class="container">
         <span class="lock"></span>
     </div>
-    <div>
-        <small id="denied" style="margin-left: 47%; width:auto; font-family:sans-serif; color:var(--locked-color);"></small>
-    </div>
-    <div>
-        <p id="granted" style="margin-left: 38%; width:auto; font-family:sans-serif; color:var(--unlocked-color);"></p>
+    <div class="center-screen">
+        <small id="denied" style="font-family:sans-serif; color:var(--locked-color);"></small>
+        <p id="granted" style="font-family:sans-serif; color:var(--unlocked-color);"></p>
     </div>
 
     <script>

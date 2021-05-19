@@ -25,6 +25,13 @@
         min-height: 400px;
         }
 
+        .center-screen {
+          display: flex;
+          flex-direction: column;
+          text-align: center;
+          min-height: 100vh;
+        }
+
         #form { 
             background: rgb(255, 255, 255); 
             padding: 0rem; 
@@ -159,11 +166,9 @@
     <div class="container">
       <span class="lock"></span>
     </div>
-    <div>
-      <small id="denied" style="margin-left: 47%; margin-right: auto; font-family:sans-serif; color:var(--locked-color);"></small>
-    </div>
-    <div>
-      <small id="granted" style="margin-left: 47%; width:auto; font-family:sans-serif; color:var(--unlocked-color);"></small>
+    <div class="center-screen">
+      <small id="denied" style="font-family:sans-serif; color:var(--locked-color);"></small>
+      <small id="granted" style="font-family:sans-serif; color:var(--unlocked-color);"></small>
     </div>
     <script>
       $( window ).on( "load", function() {

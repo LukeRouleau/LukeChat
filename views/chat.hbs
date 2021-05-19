@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>LukeChat</title>
+    <style>
+      body { 
+        margin: 0; 
+        padding-bottom: 3rem; 
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+        background-color: #ffffff;
+        /* from www.svgbackgrounds.com */
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='30' viewBox='0 0 1000 120'%3E%3Cg fill='none' stroke='%23f8dfcf' stroke-width='4.3' stroke-opacity='0.52'%3E%3Cpath d='M-500 75c0 0 125-30 250-30S0 75 0 75s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 45c0 0 125-30 250-30S0 45 0 45s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 105c0 0 125-30 250-30S0 105 0 105s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 15c0 0 125-30 250-30S0 15 0 15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500-15c0 0 125-30 250-30S0-15 0-15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 135c0 0 125-30 250-30S0 135 0 135s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3C/g%3E%3C/svg%3E");
+      }
+
+      #form { background: rgba(195, 212, 243, 0.322); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+      #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+      #input:focus { outline: none; }
+      #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
+
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages > li { padding: 0.5rem 1rem; }
+      #messages > li:nth-child(even) { background: #d3f3f3b4; }
+      #messages > li:nth-child(odd) { background: #efefefb4; }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <link rel="icon" href="data:,">
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+      <input id="input" autocomplete="off" /><button>Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      // Socket IO script stuff
+      var socket = io();
+
+      var form = document.getElementById('form');
+      var input = document.getElementById('input');
+
+      //temp
+      var user;
+      var color;
+
+      form.addEventListener('submit', function(event) {
+          event.preventDefault(); // guarantee that we do the blow action and only this action if there's input 
+          if(input.value) {
+              // send the msg value to the backend, which will add the username and color and send it out 
+              socket.emit('chat message', input.value);
+              input.value = '';
+          }
+      });
+
+      socket.on('connect', function(data) {
+        console.log("We have connected");
+        $.get("/clientInfo", function( data ) {
+          console.log(" My authToken : " + data.authToken);  
+          console.log(" My nickname is : " + data.nickname);
+          console.log(" My color is : " + data.color);
+          user = data.nickname;
+          color = data.color
+          socket.emit('storeClientInfo', { authToken: data.authToken, nn: data.nickname, color: data.color });
+        });        
+      });
+
+      socket.on('chat message', function(postPacket) {
+          var item = document.createElement('li'); // this is the html way to create a new element with code (dynamically)
+
+          console.log("postPacket: " + postPacket);
+          console.log("postPacket.message: " + postPacket.message);
+          console.log("postPacket.posterName: " + postPacket.posterName);
+          console.log("postPacket.color: " + postPacket.color);
+
+
+          // needs to be the actual user nickname
+          item.textContent = "["+ String(postPacket.posterName) + "] " + postPacket.message;
+
+          //needs to be the user text color
+          item.style.color = String(postPacket.color);
+          
+          messages.appendChild(item);
+          window.scrollTo(0, document.body.scrollHeight);
+      });
+
+      /*
+      socket.on('disconnect', () => {
+        console.log(document.cookie);
+        socket.emit('disconnect', document.cookie);
+      });
+      */
+    </script>
+    <script>
+      $( window ).on( "load", function() {
+          $.get("/verify", function( data ) {
+            if (data == '1') {
+              // If approved
+              console.log("approved");
+            }
+            else {
+              // If unapproved: never plays unless your network SUCKS
+              console.log("unapproved");
+            }
+          });
+        });
+    </script>
+  </body>
+</html>

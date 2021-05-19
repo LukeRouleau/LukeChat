@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>LukeChat</title>
+    <style>
+      body{
+        background-color: #ffffff;
+        /* from www.svgbackgrounds.com */
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='30' viewBox='0 0 1000 120'%3E%3Cg fill='none' stroke='%23f8dfcf' stroke-width='4.3' stroke-opacity='0.52'%3E%3Cpath d='M-500 75c0 0 125-30 250-30S0 75 0 75s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 45c0 0 125-30 250-30S0 45 0 45s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 105c0 0 125-30 250-30S0 105 0 105s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 15c0 0 125-30 250-30S0 15 0 15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500-15c0 0 125-30 250-30S0-15 0-15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 135c0 0 125-30 250-30S0 135 0 135s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3C/g%3E%3C/svg%3E");
+      }
+
+        /* :::::::::::::: Presentation css */
+        * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        --locked-color: #5fadbf;
+        --unlocked-color: #24c091;
+        }
+        .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+        min-height: 400px;
+        }
+
+        #form { 
+            background: rgb(255, 255, 255); 
+            padding: 0rem; 
+            position: relative; 
+            display: flex;
+            margin: auto;
+            margin-top: 10rem;
+            height: 3rem; 
+            max-width: 10rem;
+            border-radius: 0rem;
+            box-sizing:border-box; 
+            backdrop-filter: blur(10px); 
+        }
+        #input { 
+            border: 2px solid #5fadbf;
+            border-radius: 4px;
+            padding: 0 0.3rem; 
+            flex-grow: 1; 
+            margin: 0.25rem; 
+        }
+        #input:focus { outline: none; }
+        
+        @keyframes shake {
+          0% {
+            transform: translate(0);
+          }
+          20% {
+            transform: translate(3em);
+          }
+          40% {
+            transform: translate(-3em);
+          }
+          60% {
+            transform: translate(3em);
+          }
+          80% {
+            transform: translate(-3em);
+          }
+          100% {
+            transform: translate(0);
+          }
+        }
+        /* :::::::::::::: Required CSS */
+        /* Locked */
+        .lock {
+        width: 24px;
+        height: 21px;
+        border: 3px solid var(--locked-color);
+        border-radius: 5px;
+        position: relative;
+        cursor: pointer;
+        -webkit-transition: all 0.1s ease-in-out;
+        transition: all 0.1s ease-in-out;
+        }
+        .lock:after {
+        content: "";
+        display: block;
+        background: var(--locked-color);
+        width: 3px;
+        height: 7px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -3.5px 0 0 -2px;
+        -webkit-transition: all 0.1s ease-in-out;
+        transition: all 0.1s ease-in-out;
+        }
+        .lock:before {
+        content: "";
+        display: block;
+        width: 10px;
+        height: 10px;
+        bottom: 100%;
+        position: absolute;
+        left: 50%;
+        margin-left: -8px;
+        border: 3px solid var(--locked-color);
+        border-top-right-radius: 50%;
+        border-top-left-radius: 50%;
+        border-bottom: 0;
+        -webkit-transition: all 0.1s ease-in-out;
+        transition: all 0.1s ease-in-out;
+        }
+        /* Locked Hover */
+        .lock:hover:before {
+        height: 12px;
+        }
+        /* Unlocked */
+        .unlocked {
+        transform: rotate(10deg);
+        }
+        .unlocked:before {
+          bottom: 130%;
+          left: 31%;
+          margin-left: -11.5px;
+          transform: rotate(-45deg);
+        }
+        .unlocked,
+        .unlocked:before {
+          border-color: var(--unlocked-color);
+        }
+        .unlocked:after {
+          background: var(--unlocked-color);
+        }
+        /* Unlocked Hover */
+        .unlocked:hover {
+          transform: rotate(3deg);
+        }
+        .unlocked:hover:before {
+          height: 10px;
+          left: 40%;
+          bottom: 124%;
+          transform: rotate(-30deg);
+        }
+
+        .lock.shake {
+          animation: shake 0.5s infinite;
+        }
+
+
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="icon" href="data:,">
+  </head>
+  <body>
+    <div>
+        <form id="form" action="/login" method="POST">
+          <input name="password" type="password" placeholder="Enter Password" id="input" autocomplete="off" />
+        </form>
+    </div>  
+    <div class="container">
+      <span class="lock"></span>
+    </div>
+    <div>
+      <small id="denied" style="margin-left: 47%; margin-right: auto; font-family:sans-serif; color:var(--locked-color);"></small>
+    </div>
+    <div>
+      <small id="granted" style="margin-left: 47%; width:auto; font-family:sans-serif; color:var(--unlocked-color);"></small>
+    </div>
+    <script>
+      $( window ).on( "load", function() {
+          $(".lock").effect( "shake" );
+        });
+
+      $("#form").submit(function(e) {
+        // stop normal submit:
+        e.preventDefault();
+        // get values from form
+        var $form = $( "#form" ),
+          term = $form.find("input[name='password']").val(),
+          url = $form.attr("action");
+        //send using post request
+        var posting = $.post( url, {password: term} );
+        posting.done(function() {
+          console.log("The post is done");
+          $.get("/verify", function( data ) {
+            if (data == '1') {
+              console.log("approved");
+              $( "#granted" ).text( "Access granted." ).show().delay(500).fadeOut( 200 );
+              setTimeout(function() { window.location = "./nickname"; }, 100);
+            }
+            else {
+              console.log("nah");
+              $( ".lock" ).effect( "shake" );
+              $( "#denied" ).text( "Access denied." ).show().delay(500).fadeOut( 200 );
+            }
+          });
+        });
+
+      });
+
+      $( ".lock" ).click(function(e) {
+        // stop normal submit:
+        e.preventDefault();
+        // get values from form
+        var $form = $( "#form" ),
+          term = $form.find("input[name='password']").val(),
+          url = $form.attr("action");
+        //send using post request
+        var posting = $.post( url, {password: term} );
+        posting.done(function() {
+          console.log("The post is done");
+          $.get("/verify", function( data ) {
+            if (data == '1') {
+              console.log("approved");
+              $( "#granted" ).text( "Access granted." ).show().delay(500).fadeOut( 200 );
+              setTimeout(function() { window.location = "./nickname"; }, 800);
+            }
+            else {
+              console.log("nah");
+              $( ".lock" ).effect( "shake" );
+              $( "#denied" ).text( "Access denied." ).show().delay(500).fadeOut( 200 );
+            }
+          });
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -10,7 +10,6 @@ const io = new Server(server);
 const crypto = require('crypto');
 require('dotenv').config();
 
-
 // Global stores:
 const authTokens = {};
 const nickNames = {};
@@ -240,6 +239,7 @@ io.on('connection', (socket) => {
     
 });
 
-server.listen(3000, () => {
-  console.log('listening on *:3000');
+const PORT = process.env.PORT || 3000;  // When we have it hosted on Heroku, use the environment variable; otherwise, just use port 5000 
+server.listen(PORT, () => {
+  console.log(`listening on *:${PORT}`);
 });
